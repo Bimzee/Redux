@@ -1,46 +1,86 @@
-# Getting Started with Create React App
+# Redux
+---
+## Useful Links
+---
+https://redux-toolkit.js.org/introduction/getting-started  
+https://redux.js.org/usage/usage-with-typescript  
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Action:
+---
+An action is a plain JavaScript object that has a type field\
+Eg:   
+```javascript 
+const addTodoAction = {
+  type: 'todos/todoAdded',
+  payload: 'Buy milk'
+} 
+```
+## ActionCreator
+---
+An action creator is a function that creates and returns an action object  
+```javascript
+const addTodo = text => {
+  return {
+    type: 'todos/todoAdded',
+    payload: text
+  }
+} 
+``` 
+## Reducers
+---
+A reducer is a function that receives the current state and an action object, decides how to update the state if necessary, and returns the new state:   
+think of a reducer as an event listener which handles events based on the received action (event) type.
+` (state, action) => newState. `
+```javascript
+const initialState = { value: 0 }
 
-## Available Scripts
+function counterReducer(state = initialState, action) {
+  // Check to see if the reducer cares about this action
+  if (action.type === 'counter/increment') {
+    // If so, make a copy of `state`
+    return {
+      ...state,
+      // and update the copy with the new value
+      value: state.value + 1
+    }
+  }
+  // otherwise return the existing state unchanged
+  return state
+}
+```
 
-In the project directory, you can run:
+## Store
+---
+The current Redux application state lives in an object called the store.  
+The store is created by passing in a reducer, and has a method called getState that returns the current state value
 
-### `npm start`
+```javascript 
+import { configureStore } from '@reduxjs/toolkit'
+const store = configureStore({ reducer: counterReducer })
+console.log(store.getState())
+// {value: 0}
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Dispatch
+---
+The only way to update the state is to call ` store.dispatch() ` and pass in an action object.  
+```javascript
+store.dispatch({ type: 'counter/increment' })
+console.log(store.getState())
+// {value: 1}
+```  
+## Selectors
+---
+Selectors are functions that know how to extract specific pieces of information from a store state value.
+```javascript
+const selectCounterValue = state => state.value
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+const currentValue = selectCounterValue(store.getState())
+console.log(currentValue)
+// 2
+```
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Todo
+---
+React ContextAPI
+React useReducer
